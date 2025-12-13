@@ -1,0 +1,11 @@
+﻿@model Milestone4.Models.GameCellModel
+@{
+    bool? gameFinished = ViewData["GameFinished"] as bool?;
+}
+
+<div class="game-cell" data-id="@Model.Id">
+    <button type="button" name="id" value="@Model.Id"
+            disabled="@(Model.Visited || (gameFinished ?? false) ? "disabled" : null)">
+        <img src="@Model.Image" alt="Minesweeper cell" />
+    </button>
+</div>

@@ -1,0 +1,29 @@
+﻿@model Milestone4.Models.GameBoardViewModel
+
+<Link rel="stylesheet" href="~/css/minesweeper.css" />
+
+<span id="firstMove" style="display:none">@Model.FirstMove</span>
+<span id="gameFinished" style="display:none">@Model.GameFinished</span>
+
+@if (Model.GameFinished)
+{
+    <div class="row">
+        <h2>@ViewData["Message"]</h2>
+        <p style="display:block"><strong>Time elapsed:</strong> @TimeSpan.FromMilliseconds(Model.Time).ToString(@"hh\:mm\:ss")</p>
+        <p style="display:block"><strong>Score:</strong> @Model.Score</p>
+        <p style="display:block"><a href="/Minesweeper/NewGameSameSettings">New Game (Same settings)</a></p>
+        <p style="display:block"><a href="/Minesweeper/StartGame">Return to New Game Page</a></p>
+    </div>
+}
+
+<div style="font-size: 0;" class="row">
+    @for (int x = 0; x < Model.Size; x++) // Row loop
+    {
+        for (int y = 0; y < Model.Size; y++) // Column loop
+        {
+            @Html.Partial("_GameCell", Model.Grid[x, y], new ViewDataDictionary(ViewData) { { "GameFinished", Model.GameFinished } })
+        }
+        // new row
+        <div style="width:100%"></div>
+    }
+</div>

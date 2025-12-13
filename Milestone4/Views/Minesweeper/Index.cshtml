@@ -1,0 +1,62 @@
+﻿@model Milestone4.Models.GameSettingsModel
+
+<h4>New Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="NewGame">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Size" class="control-label"></label>
+
+                <br />
+
+                <input type="radio" asp-for="Size" value="12" />
+                <label>Small (12x12)</label>
+                <br />
+
+                <input type="radio" asp-for="Size" value="24" />
+                <label>Medium (24x24)</label>
+                <br />
+
+                <input type="radio" asp-for="Size" value="32" />
+                <label>Large (32x32)</label>
+                <br />
+
+                <span asp-validation-for="Size" class="text-danger"></span>
+                <br />
+            </div>
+            <div class="form-group">
+                <label asp-for="DifficultySelection" class="control-label">Difficulty</label>
+
+                <br />
+
+                <input type="radio" asp-for="DifficultySelection" value="Easy" />
+                <label>Easy</label>
+                <br />
+
+                <input type="radio" asp-for="DifficultySelection" value="Medium" />
+                <label>Medium</label>
+                <br />
+
+                <input type="radio" asp-for="DifficultySelection" value="Hard" />
+                <label>Hard</label>
+                <br />
+
+                <span asp-validation-for="DifficultySelection" class="text-danger"></span>
+                <br />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

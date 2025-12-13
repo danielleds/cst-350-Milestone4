@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Milestone4.Models.GameBoardModel>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                Date Saved
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        string elId = "game" + item.Id.ToString();
+        <tr id=@elId>
+                <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateSaved)
+            </td>
+            <td>
+                <a href="#" class="btn btn-danger deleteGame" value="@item.Id">Delete</a>
+                @Html.ActionLink("Load Game", "LoadSavedGame", new { id = item.Id }, new { @class = "btn btn-primary" })
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(document).on("click", ".deleteGame", function (e) {
+            e.preventDefault();
+
+            let proceed = confirm("Are you sure you want to delete this game?");
+            if (proceed) {
+                var gameId = $(this).attr("value");
+                var urlMethod = "/api/DeleteOneGame/" + gameId;
+                $.ajax({
+                    type: "DELETE",
+                    url: urlMethod,
+                    success: function (data) {
+                        $("#game" + gameId).remove();
+                        alert("Game successfully deleted.");
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("An error occurred: " + error);
+                    }
+                });
+            }
+        });
+    });
+</script>

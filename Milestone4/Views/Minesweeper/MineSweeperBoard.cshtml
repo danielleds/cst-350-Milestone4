@@ -1,0 +1,104 @@
+﻿@model Milestone4.Models.GameBoardViewModel
+
+@{
+    var time = Model.Time > 0 ? Model.Time : 0;
+}
+
+<Link rel="stylesheet" href="~/css/minesweeper.css" />
+
+<div id="stopwatchContainer" style="display:none">
+    <p><strong>Time Elapsed: </strong><span id="stopwatch"></span></p>
+    <input type="hidden" id="internalStopwatchTime" name="internalStopwatchTime" value="@time" />
+</div>
+
+<button type="button" class="btn btn-primary" id="saveButton">Save Game</button>
+<span id="saveMessage" style="display:none">Game saved successfully.</span>
+
+<div class="container" id="gameBoard">
+    @Html.Partial("_GameBoard", Model)
+</div>
+
+<script src="/js/timer.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    firstMove = "True";
+
+    $(document).ready(function () {
+        // prepare the timer if the game was loaded
+        console.log($("#internalStopwatchTime").val());
+        if ($("#internalStopwatchTime").val() > 0) {
+            $("#stopwatchContainer").css("display", "block");
+            firstMove = "False";
+            setLoadedTime($("#internalStopwatchTime").val());
+            startStopwatch();
+        }
+
+        // LEFT CLICK
+        $(document).on("click", ".game-cell button", function (e) {
+            e.preventDefault();
+            var cellId = $(this).val();
+            var elapsedTime = $("#internalStopwatchTime").val();
+            $.ajax({
+                type: "POST",
+                url: "/Minesweeper/CellLeftClick",
+                data: { id: cellId, internalStopwatchTime: elapsedTime },
+                success: function (data) {
+                    var gameBoardDiv = $("#gameBoard");
+                    gameBoardDiv.html(data);
+
+                    if ($("#firstMove").text() !== firstMove) {
+                        $("#stopwatchContainer").css("display", "block");
+                        firstMove = $("#firstMove").text();
+                        startStopwatch();
+                    }
+
+                    if ($("#gameFinished").text() === "True") {
+                        stopStopwatch();
+                        $("#stopwatchContainer").css("display", "none");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("An error occurred: " + error);
+                }
+            });
+        });
+
+        // RIGHT CLICK
+        $(document).on("contextmenu", ".game-cell button", function (e) {
+            e.preventDefault();
+            var cellId = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/Minesweeper/CellRightClick",
+                data: { id: cellId },
+                success: function (data) {
+                    var gameCellDiv = $(".game-cell[data-id='" + cellId + "']");
+                    gameCellDiv.html(data);
+                },
+                error: function (xhr, status, error) {
+                    console.error("An error occurred: " + error);
+                }
+            });
+        });
+
+        $(document).on("click", "#saveButton", function (e) {
+            e.preventDefault();
+            var elapsedTime = $("#internalStopwatchTime").val();
+            $.ajax({
+                type: "POST",
+                url: "/Minesweeper/SaveGameFromBoard",
+                data: { internalStopwatchTime: elapsedTime },
+                success: function (data) {
+                    $("#saveMessage").css("display", "inline");
+                    setTimeout(() => {
+                        $("#saveMessage").css("display", "none");
+                    }, 3000);
+                },
+                error: function (xhr, status, error) {
+                    console.error("An error occurred: " + error);
+                }
+            });
+        });
+    });
+</script>
