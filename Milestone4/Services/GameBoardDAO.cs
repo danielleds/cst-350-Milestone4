@@ -1,7 +1,5 @@
-﻿using Microsoft.CodeAnalysis.Elfie.Diagnostics;
-using Milestone4.Models;
+﻿using Milestone4.Models;
 using MySql.Data.MySqlClient;
-using NuGet.Protocol.Plugins;
 
 namespace Milestone4.Services
 {

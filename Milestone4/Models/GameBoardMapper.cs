@@ -48,8 +48,6 @@ namespace Milestone4.Models
             {
                 return null;
             }
-
-            throw new NotImplementedException();
         }
     }
 }

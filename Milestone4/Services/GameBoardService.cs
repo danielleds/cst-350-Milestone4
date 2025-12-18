@@ -1,6 +1,4 @@
 ﻿using Milestone4.Models;
-using Milestone4.Services;
-using Milestone4.Models;
 
 namespace Milestone4.Services
 {
